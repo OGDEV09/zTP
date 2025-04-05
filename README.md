@@ -1,63 +1,104 @@
-zTP - Teleportation Plugin
-GitHub
-Spigot Version
+# zTP - Teleportation Plugin
 
 Ein erweitertes Teleportations-Plugin mit GUI-Menü, Cooldowns und Anti-Spam-Schutz.
 
-📥 Installation
-Lade die neueste Version herunter
+## 📥 Installation
 
-Platziere die .jar-Datei in deinem plugins/-Ordner
+1. Download the latest version
+2. Place the `.jar` file in your `plugins/` folder
+3. Restart your server
 
-Starte deinen Server neu
+## 📋 Features
 
-📋 Features
-✅ GUI-basierte Teleportationsanfragen
+- ✅ GUI-based teleport requests
+- ⏱️ Configurable cooldowns (10min default)
+- 🔒 Permission system
+- 🔊 Customizable sounds
+- 📝 Fully configurable messages
+- 🛡️ Anti-spam protection
 
-⏱️ Konfigurierbare Cooldowns (10 Minuten Standard)
+## 🛠️ Commands
 
-🔒 Permissions-System
+| Command | Description | Permission |
+|---------|-------------|------------|
+| `/tpaall` | Send TP request to all players | `tpall.use` |
+| `/tpaallaccept` | Open accept menu | `tpall.accept` |
+| `/ztpreload` | Reload configuration | `ztp.reload` |
 
-🔊 Anpassbare Sounds
+## 🔧 Configuration
 
-📝 Vollständig konfigurierbare Nachrichten
+`config.yml` is auto-generated. Default values:
 
-🛡️ Anti-Spam-Schutz
+```yaml
+# ====================================================
+# zTP - Teleportationssystem Konfiguration
+# ====================================================
 
-🛠️ Kommandos
-Befehl	Beschreibung	Permission
-/tpaall	Sendet eine TP-Anfrage an alle Spieler	tpall.use
-/tpaallaccept	Öffnet das Annahme-Menü	tpall.accept
-/ztpreload	Lädt die Konfiguration neu	ztp.reload
-🔧 Konfiguration
-Die config.yml wird automatisch generiert. Hier die Standardwerte:
-
-yaml
-Copy
 settings:
-  teleport-countdown: 5
-  tpall-cooldown-seconds: 600
-  gui-accept-item: "LIME_STAINED_GLASS_PANE"
-  gui-deny-item: "RED_STAINED_GLASS_PANE"
+  # Teleport-Einstellungen
+  request-lifetime-seconds: 60  # Wie lange Anfragen gültig bleiben (in Sekunden)
+  teleport-sound: "ENTITY_ENDERMAN_TELEPORT"  # Sound bei Teleportation
+  teleport-countdown: 5  # Countdown-Dauer vor Teleport (in Sekunden)
+  tpall-cooldown-seconds: 600  # Cooldown für /tpaall Befehl (in Sekunden) - 10 Minuten
+  movement-cancellation: true  # Ob Bewegung den Teleport abbricht
+  allow-multiple-requests: false  # Mehrere parallele Anfragen erlauben
+
+  # GUI-Einstellungen
+  gui-size: 27  # Größe des Inventars (9, 18, 27, etc.)
+  gui-accept-item: "LIME_STAINED_GLASS_PANE"  # Material für Annehmen-Button
+  gui-deny-item: "RED_STAINED_GLASS_PANE"  # Material für Ablehnen-Button
+
+  # Sound-Einstellungen
+  notification-sound: "BLOCK_NOTE_BLOCK_PLING"  # Sound bei neuer Anfrage
+  sound-volume: 1.0  # Lautstärke (0.1 - 1.0)
+  sound-pitch: 1.0  # Tonhöhe (0.5 - 2.0)
 
 messages:
+  # Systemnachrichten
+  expired_notify: "&cDie Teleport-Anfrage ist abgelaufen."
+  reload-success: "&aKonfiguration erfolgreich neu geladen!"
+  reload-fail: "&cFehler beim Neuladen der Konfiguration!"
+
+  # Fehlermeldungen
+  errors:
+    no-request: "&cDu hast keine aktive Teleport-Anfrage."
+    cooldown: "&cDu kannst &e/tpaall &cerst in &e{seconds} Sekunden &cwieder benutzen."
+    already-interacted: "&cDu kannst erst in {time} Sekunden wieder auf eine Anfrage reagieren."
+    no-permission: "&cDazu hast du keine Berechtigung!"
+    player-offline: "&cDer Spieler ist offline."
+    movement-canceled: "&cTeleportation abgebrochen wegen Bewegung!"
+
+  # Teleport-Nachrichten
+  teleport:
+    countdown: "&7Teleportation in &6{seconds} &7Sekunden..."
+    success: "&aDu wurdest zu &e{player} &ateleportiert!"
+    canceled: "&cTeleportation abgebrochen!"
+    deny: "&cDu hast die Teleport-Anfrage abgelehnt."
+    actionbar: "&bTeleportation in &e{seconds}&b Sekunden..."
+
+  # Anfrage-Nachrichten
+  request:
+    line1: "&6{player} &7möchte, dass alle Spieler zu ihm kommen!"
+    line2: "&a&l[KLICKE HIER] &7um die Anfrage anzunehmen"
+    sent: "&aTeleport-Anfrage an &e{count} &aSpieler gesendet!"
+
+  # GUI-Einstellungen
   gui:
-    title: "&8Teleport-Anfrage von {player}"
+    title: "&8TP ALL ANFRAGE"
     accept: "&a✔ Annehmen"
     deny: "&c✖ Ablehnen"
-📜 Permissions
-yaml
-Copy
-permissions:
-  tpall.use:
-    description: Erlaubt /tpaall
-    default: op
-  tpall.accept:
-    description: Erlaubt Anfragen anzunehmen
-    default: true
-  ztp.reload:
-    description: Erlaubt Konfig-Neuladen
-    default: op
-📦 Abhängigkeiten
-Spigot/Paper 1.16+
-Java 11+
+    head_name: "&eTeleport zu &6{player}"
+    lore:
+      - "&7Klicke zum Annehmen"
+      - "&7oder schließe das Inventar"
+      - "&7zum Ablehnen"
+
+# Fortgeschrittene Einstellungen
+advanced:
+  # Schutz vor Missbrauch
+  max-requests-per-minute: 5  # Maximale Anfragen pro Minute
+  spam-protection: true  # Anti-Spam Schutz
+
+  # Logging-Einstellungen
+  log-teleports: true  # Teleportationen protokollieren
+  log-format: "[zTP] {player} teleportierte zu {target}"
